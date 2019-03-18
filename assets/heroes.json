@@ -1,0 +1,32 @@
+[
+  {
+    "id": 3,
+    "name": "Iron Man",
+    "identity": "Tony Stark",
+    "hometown": "New York",
+    "age": 34,
+    "createdAt": "2019-03-17T14:00:20.938Z",
+    "updatedAt": "2019-03-17T14:00:30.937Z",
+    "deletedAt": null
+  },
+  {
+    "id": 1,
+    "name": "Dr. Strange",
+    "identity": "Steven Strange",
+    "hometown": "New York",
+    "age": 35,
+    "createdAt": "2019-03-16T10:00:53.544Z",
+    "updatedAt": "2019-03-17T15:10:32.726Z",
+    "deletedAt": null
+  },
+  {
+    "id": 5,
+    "name": "Spiderman",
+    "identity": "Peter Parker",
+    "hometown": "New York",
+    "age": 18,
+    "createdAt": "2019-03-17T15:12:01.913Z",
+    "updatedAt": "2019-03-17T15:12:01.913Z",
+    "deletedAt": null
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "id": 3,
+  "name": "Iron Man",
+  "identity": "Tony Stark",
+  "hometown": "New York",
+  "age": 34,
+  "createdAt": "2019-03-17T14:00:20.938Z",
+  "updatedAt": "2019-03-17T14:00:30.937Z",
+  "deletedAt": null
+}
