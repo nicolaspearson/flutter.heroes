@@ -1,6 +1,5 @@
 import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
-import 'dart:convert';
 import 'package:heroes/models/hero_model.dart';
 
 Future<String> _loadAHeroAsset() async {
@@ -9,8 +8,7 @@ Future<String> _loadAHeroAsset() async {
 
 Future loadHero() async {
   String jsonString = await _loadAHeroAsset();
-  final jsonResponse = json.decode(jsonString);
-  Hero hero = new Hero.fromJson(jsonResponse);
+  Hero hero = heroFromJson(jsonString);
   print("hero: " + hero.name);
 }
 
@@ -20,8 +18,7 @@ Future<String> _loadHeroesAsset() async {
 
 Future loadHeroes() async {
   String jsonString = await _loadHeroesAsset();
-  final jsonResponse = json.decode(jsonString);
-  Heroes heroList = Heroes.fromJson(jsonResponse);
+  Heroes heroList = heroesFromJson(jsonString);
   for (var hero in heroList.heroes) {
     print("hero: " + hero.name);
   }

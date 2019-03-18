@@ -1,3 +1,10 @@
+import 'dart:convert';
+
+Heroes heroesFromJson(String str) {
+  final jsonData = json.decode(str);
+  return Heroes.fromJson(jsonData);
+}
+
 class Heroes {
   final List<Hero> heroes;
 
@@ -8,9 +15,18 @@ class Heroes {
   factory Heroes.fromJson(List<dynamic> parsedJson) {
     List<Hero> heroes = new List<Hero>();
     heroes = parsedJson.map((i) => Hero.fromJson(i)).toList();
-
     return new Heroes(heroes: heroes);
   }
+}
+
+Hero heroFromJson(String str) {
+  final jsonData = json.decode(str);
+  return Hero.fromJson(jsonData);
+}
+
+String heroToJson(Hero data) {
+  final dyn = data.toJson();
+  return json.encode(dyn);
 }
 
 class Hero {
@@ -45,4 +61,15 @@ class Hero {
       deletedAt: parsedJson['deletedAt'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "identity": identity,
+        "hometown": hometown,
+        "age": age,
+        "createdAt": createdAt,
+        "updatedAt": updatedAt,
+        "deletedAt": deletedAt,
+      };
 }
