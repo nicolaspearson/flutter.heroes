@@ -1,35 +1,26 @@
 import 'dart:convert';
 
-Heroes heroesFromJson(String str) {
+HeroItem heroFromJson(String str) {
   final jsonData = json.decode(str);
-  return Heroes.fromJson(jsonData);
+  return HeroItem.fromJson(jsonData);
 }
 
-class Heroes {
-  final List<Hero> heroes;
-
-  Heroes({
-    this.heroes,
-  });
-
-  factory Heroes.fromJson(List<dynamic> parsedJson) {
-    List<Hero> heroes = new List<Hero>();
-    heroes = parsedJson.map((i) => Hero.fromJson(i)).toList();
-    return new Heroes(heroes: heroes);
-  }
-}
-
-Hero heroFromJson(String str) {
-  final jsonData = json.decode(str);
-  return Hero.fromJson(jsonData);
-}
-
-String heroToJson(Hero data) {
+String heroToJson(HeroItem data) {
   final dyn = data.toJson();
   return json.encode(dyn);
 }
 
-class Hero {
+List<HeroItem> heroesFromJson(String str) {
+  final jsonData = json.decode(str);
+  return new List<HeroItem>.from(jsonData.map((x) => HeroItem.fromJson(x)));
+}
+
+String heroesToJson(List<HeroItem> data) {
+  final dyn = new List<dynamic>.from(data.map((x) => x.toJson()));
+  return json.encode(dyn);
+}
+
+class HeroItem {
   int id;
   String name;
   String identity;
@@ -39,7 +30,7 @@ class Hero {
   String updatedAt;
   String deletedAt;
 
-  Hero(
+  HeroItem(
       {this.id,
       this.name,
       this.identity,
@@ -49,8 +40,8 @@ class Hero {
       this.updatedAt,
       this.deletedAt});
 
-  factory Hero.fromJson(Map<String, dynamic> parsedJson) {
-    return Hero(
+  factory HeroItem.fromJson(Map<String, dynamic> parsedJson) {
+    return HeroItem(
       id: parsedJson['id'],
       name: parsedJson['name'],
       identity: parsedJson['identity'],
