@@ -70,9 +70,8 @@ class _HomePageState extends State<HomePage> {
                     return new Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          new Text(snapshot.data[index].name,
-                              style:
-                                  new TextStyle(fontWeight: FontWeight.bold)),
+                          _tile(snapshot.data[index].name,
+                              snapshot.data[index].identity, Icons.star),
                           new Divider()
                         ]);
                   });
@@ -92,3 +91,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+ListTile _tile(String title, String subtitle, IconData icon) => ListTile(
+      title: Text(title,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 20,
+          )),
+      subtitle: Text(subtitle),
+      leading: Icon(
+        icon,
+        color: Colors.blue[500],
+      ),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: Colors.grey[500],
+      ),
+    );
