@@ -45,6 +45,40 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  ListTile _createTile(HeroItem hero, IconData icon) => ListTile(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HeroDetails(),
+              // Pass the arguments as part of the RouteSettings. The
+              // ExtractArgumentScreen reads the arguments from these
+              // settings.
+              settings: RouteSettings(
+                arguments: ScreenArguments(
+                  hero,
+                  false,
+                ),
+              ),
+            ),
+          );
+        },
+        title: Text(hero.name,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+            )),
+        subtitle: Text(hero.identity),
+        leading: Icon(
+          icon,
+          color: Colors.blue[500],
+        ),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: Colors.grey[500],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -70,8 +104,7 @@ class _HomePageState extends State<HomePage> {
                     return new Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          _tile(snapshot.data[index].name,
-                              snapshot.data[index].identity, Icons.star),
+                          _createTile(snapshot.data[index], Icons.star),
                           new Divider()
                         ]);
                   });
@@ -92,19 +125,32 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-ListTile _tile(String title, String subtitle, IconData icon) => ListTile(
-      title: Text(title,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 20,
-          )),
-      subtitle: Text(subtitle),
-      leading: Icon(
-        icon,
-        color: Colors.blue[500],
+class HeroDetails extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Extract the arguments from the current ModalRoute settings and cast them as ScreenArguments.
+    final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+    print(args);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Hero"),
       ),
-      trailing: Icon(
-        Icons.chevron_right,
-        color: Colors.grey[500],
+      body: Center(
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
       ),
     );
+  }
+}
+
+class ScreenArguments {
+  final HeroItem hero;
+  final bool isCreate;
+
+  ScreenArguments(this.hero, this.isCreate);
+}
