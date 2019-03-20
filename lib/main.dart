@@ -180,6 +180,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextFormField(
+            autofocus: true,
             decoration: InputDecoration(labelText: 'Name'),
             initialValue: widget.hero.name,
             validator: (value) {
