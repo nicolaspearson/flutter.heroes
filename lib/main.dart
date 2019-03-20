@@ -41,23 +41,37 @@ class _HomePageState extends State<HomePage> {
 
   void _handleCreateHero() {
     setState(() {
-      _createHero = !_createHero;
+      _createHero = true;
     });
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HeroDetails(),
+        // Pass the arguments as part of the RouteSettings.
+        settings: RouteSettings(
+          arguments: ScreenArguments(
+            new HeroItem(age: 0),
+            _createHero,
+          ),
+        ),
+      ),
+    );
   }
 
   ListTile _createTile(HeroItem hero, IconData icon) => ListTile(
         onTap: () {
+          setState(() {
+            _createHero = false;
+          });
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => HeroDetails(),
-              // Pass the arguments as part of the RouteSettings. The
-              // ExtractArgumentScreen reads the arguments from these
-              // settings.
+              // Pass the arguments as part of the RouteSettings.
               settings: RouteSettings(
                 arguments: ScreenArguments(
                   hero,
-                  false,
+                  _createHero,
                 ),
               ),
             ),
@@ -81,9 +95,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
@@ -157,7 +168,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
   //
-  // Note: This is a `GlobalKey<FormState>`, not a GlobalKey<MyCustomFormState>!
+  // Note: This is a `GlobalKey<FormState>`, not a GlobalKey<_HeroDetailsFormState>!
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -218,10 +229,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                           padding: EdgeInsets.all(12.0),
                           child: RaisedButton(
                             onPressed: () {
-                              // Validate will return true if the form is valid, or false if
-                              // the form is invalid.
                               if (_formKey.currentState.validate()) {
-                                // If the form is valid, we want to show a Snackbar
                                 Scaffold.of(context).showSnackBar(SnackBar(
                                     duration: Duration(seconds: 1),
                                     content: Text('Updating Hero...')));
@@ -240,10 +248,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                           padding: EdgeInsets.all(12.0),
                           child: RaisedButton(
                             onPressed: () {
-                              // Validate will return true if the form is valid, or false if
-                              // the form is invalid.
                               if (_formKey.currentState.validate()) {
-                                // If the form is valid, we want to show a Snackbar
                                 Scaffold.of(context).showSnackBar(SnackBar(
                                     duration: Duration(seconds: 1),
                                     content: Text('Deleting Hero...')));
@@ -262,10 +267,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                           padding: EdgeInsets.all(12.0),
                           child: RaisedButton(
                             onPressed: () {
-                              // Validate will return true if the form is valid, or false if
-                              // the form is invalid.
                               if (_formKey.currentState.validate()) {
-                                // If the form is valid, we want to show a Snackbar
                                 Scaffold.of(context).showSnackBar(SnackBar(
                                     duration: Duration(seconds: 1),
                                     content: Text('Creating Hero...')));
@@ -273,7 +275,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                             },
                             padding: const EdgeInsets.symmetric(
                                 vertical: 16.0, horizontal: 16.0),
-                            color: Colors.red,
+                            color: Colors.blue,
                             textColor: Colors.white,
                             child: const Text('Create'),
                           ),
