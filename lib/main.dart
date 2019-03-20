@@ -136,13 +136,71 @@ class HeroDetails extends StatelessWidget {
       appBar: AppBar(
         title: Text("Hero"),
       ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
+      body: new Container(
+        padding: new EdgeInsets.all(10.0),
+        child: HeroDetailsForm(),
+      ),
+    );
+  }
+}
+
+class HeroDetailsForm extends StatefulWidget {
+  @override
+  HeroDetailsFormState createState() {
+    return HeroDetailsFormState();
+  }
+}
+
+class HeroDetailsFormState extends State<HeroDetailsForm> {
+  // Create a global key that will uniquely identify the Form widget and allow
+  // us to validate the form
+  //
+  // Note: This is a `GlobalKey<FormState>`, not a GlobalKey<MyCustomFormState>!
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    // Extract the arguments from the current ModalRoute settings and cast them as ScreenArguments.
+    // final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+
+    // Build a Form widget using the _formKey we created above
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Name'),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter a name';
+              }
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Identity'),
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter an identity';
+              }
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: RaisedButton(
+              onPressed: () {
+                // Validate will return true if the form is valid, or false if
+                // the form is invalid.
+                if (_formKey.currentState.validate()) {
+                  // If the form is valid, we want to show a Snackbar
+                  Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text('Processing Data')));
+                }
+              },
+              child: Text('Submit'),
+            ),
+          ),
+        ],
       ),
     );
   }
