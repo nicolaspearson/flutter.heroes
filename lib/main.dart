@@ -130,7 +130,6 @@ class HeroDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     // Extract the arguments from the current ModalRoute settings and cast them as ScreenArguments.
     final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-    print(args);
 
     return Scaffold(
       appBar: AppBar(
@@ -163,9 +162,6 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Extract the arguments from the current ModalRoute settings and cast them as ScreenArguments.
-    // final ScreenArguments args = ModalRoute.of(context).settings.arguments;
-
     // Build a Form widget using the _formKey we created above
     return Form(
       key: _formKey,
@@ -216,44 +212,72 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          // Validate will return true if the form is valid, or false if
-                          // the form is invalid.
-                          if (_formKey.currentState.validate()) {
-                            // If the form is valid, we want to show a Snackbar
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text('Updating Hero...')));
-                          }
-                        },
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 16.0),
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        child: const Text('Update'),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          // Validate will return true if the form is valid, or false if
-                          // the form is invalid.
-                          if (_formKey.currentState.validate()) {
-                            // If the form is valid, we want to show a Snackbar
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text('Deleting Hero...')));
-                          }
-                        },
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 16.0),
-                        color: Colors.red,
-                        textColor: Colors.white,
-                        child: const Text('Delete'),
-                      ),
-                    ),
+                    Visibility(
+                        visible: !widget.isCreate,
+                        child: Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: RaisedButton(
+                            onPressed: () {
+                              // Validate will return true if the form is valid, or false if
+                              // the form is invalid.
+                              if (_formKey.currentState.validate()) {
+                                // If the form is valid, we want to show a Snackbar
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                    duration: Duration(seconds: 1),
+                                    content: Text('Updating Hero...')));
+                              }
+                            },
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 16.0),
+                            color: Colors.blue,
+                            textColor: Colors.white,
+                            child: const Text('Update'),
+                          ),
+                        )),
+                    Visibility(
+                        visible: !widget.isCreate,
+                        child: Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: RaisedButton(
+                            onPressed: () {
+                              // Validate will return true if the form is valid, or false if
+                              // the form is invalid.
+                              if (_formKey.currentState.validate()) {
+                                // If the form is valid, we want to show a Snackbar
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                    duration: Duration(seconds: 1),
+                                    content: Text('Deleting Hero...')));
+                              }
+                            },
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 16.0),
+                            color: Colors.red,
+                            textColor: Colors.white,
+                            child: const Text('Delete'),
+                          ),
+                        )),
+                    Visibility(
+                        visible: widget.isCreate,
+                        child: Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: RaisedButton(
+                            onPressed: () {
+                              // Validate will return true if the form is valid, or false if
+                              // the form is invalid.
+                              if (_formKey.currentState.validate()) {
+                                // If the form is valid, we want to show a Snackbar
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                    duration: Duration(seconds: 1),
+                                    content: Text('Creating Hero...')));
+                              }
+                            },
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 16.0),
+                            color: Colors.red,
+                            textColor: Colors.white,
+                            child: const Text('Create'),
+                          ),
+                        )),
                   ]))),
         ],
       ),
