@@ -138,20 +138,23 @@ class HeroDetails extends StatelessWidget {
       ),
       body: new Container(
         padding: new EdgeInsets.all(10.0),
-        child: HeroDetailsForm(),
+        child: HeroDetailsForm(hero: args.hero, isCreate: args.isCreate),
       ),
     );
   }
 }
 
 class HeroDetailsForm extends StatefulWidget {
+  HeroDetailsForm({Key key, this.hero, this.isCreate}) : super(key: key);
+
+  final HeroItem hero;
+  final bool isCreate;
+
   @override
-  HeroDetailsFormState createState() {
-    return HeroDetailsFormState();
-  }
+  _HeroDetailsFormState createState() => _HeroDetailsFormState();
 }
 
-class HeroDetailsFormState extends State<HeroDetailsForm> {
+class _HeroDetailsFormState extends State<HeroDetailsForm> {
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
   //
@@ -171,6 +174,7 @@ class HeroDetailsFormState extends State<HeroDetailsForm> {
         children: <Widget>[
           TextFormField(
             decoration: InputDecoration(labelText: 'Name'),
+            initialValue: widget.hero.name,
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter a name';
@@ -179,27 +183,78 @@ class HeroDetailsFormState extends State<HeroDetailsForm> {
           ),
           TextFormField(
             decoration: InputDecoration(labelText: 'Identity'),
+            initialValue: widget.hero.identity,
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter an identity';
               }
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
-              onPressed: () {
-                // Validate will return true if the form is valid, or false if
-                // the form is invalid.
-                if (_formKey.currentState.validate()) {
-                  // If the form is valid, we want to show a Snackbar
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-                }
-              },
-              child: Text('Submit'),
-            ),
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Hometown'),
+            initialValue: widget.hero.hometown,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter a hometown';
+              }
+            },
           ),
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Age'),
+            initialValue: widget.hero.age.toString(),
+            validator: (value) {
+              int intValue = int.tryParse(value);
+              if (intValue == null || intValue < 1) {
+                return 'Please enter an age';
+              }
+            },
+          ),
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 30.0),
+              child: Container(
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          // Validate will return true if the form is valid, or false if
+                          // the form is invalid.
+                          if (_formKey.currentState.validate()) {
+                            // If the form is valid, we want to show a Snackbar
+                            Scaffold.of(context).showSnackBar(
+                                SnackBar(content: Text('Updating Hero...')));
+                          }
+                        },
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 16.0),
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        child: const Text('Update'),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          // Validate will return true if the form is valid, or false if
+                          // the form is invalid.
+                          if (_formKey.currentState.validate()) {
+                            // If the form is valid, we want to show a Snackbar
+                            Scaffold.of(context).showSnackBar(
+                                SnackBar(content: Text('Deleting Hero...')));
+                          }
+                        },
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 16.0),
+                        color: Colors.red,
+                        textColor: Colors.white,
+                        child: const Text('Delete'),
+                      ),
+                    ),
+                  ]))),
         ],
       ),
     );
