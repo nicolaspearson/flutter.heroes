@@ -261,6 +261,17 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
     }
   }
 
+  String _numberValidator(String value) {
+    if (value == null) {
+      return null;
+    }
+    final intValue = int.tryParse(value);
+    if (intValue == null || intValue < 1) {
+      return '"$value" is not a valid age';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey we created above
@@ -300,12 +311,8 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
           TextFormField(
             controller: ageController,
             decoration: InputDecoration(labelText: 'Age'),
-            validator: (value) {
-              int intValue = int.tryParse(value);
-              if (intValue == null || intValue < 1) {
-                return 'Please enter an age';
-              }
-            },
+            keyboardType: TextInputType.number,
+            validator: _numberValidator,
           ),
           Container(
               padding: const EdgeInsets.symmetric(vertical: 30.0),
