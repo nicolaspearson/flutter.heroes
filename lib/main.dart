@@ -109,7 +109,6 @@ class _HomePageState extends State<HomePage> {
         child: new FutureBuilder<List<HeroItem>>(
           future: getHeroes(),
           builder: (context, snapshot) {
-            print('Fetched Heroes!');
             if (snapshot.hasData) {
               return new ListView.builder(
                   itemCount: snapshot.data.length,
@@ -181,6 +180,15 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
   bool apiCallInProgress = false;
 
   @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.hero.name;
+    identityController.text = widget.hero.identity;
+    hometownController.text = widget.hero.hometown;
+    ageController.text = widget.hero.age.toString();
+  }
+
+  @override
   void dispose() {
     // Clean up the controllers when the Widget is disposed
     nameController.dispose();
@@ -205,6 +213,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
     newHero.name = nameController.text;
     newHero.identity = identityController.text;
     newHero.hometown = hometownController.text;
+    newHero.updatedAt = new DateTime.now().toIso8601String();
 
     int age = int.tryParse(ageController.text);
     newHero.age = age;
@@ -215,7 +224,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
     if (apiCallInProgress)
       return new CircularProgressIndicator();
     else
-      return null;
+      return new SizedBox(height: 0, width: 0);
   }
 
   void _callApiMethod(ApiMethods method) async {
@@ -237,13 +246,19 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
         break;
     }
 
-    if (response != null) {
-      print(response);
-    }
-
     setState(() {
       apiCallInProgress = false;
     });
+
+    if (response != null &&
+        response.statusCode >= 200 &&
+        response.statusCode < 300) {
+      Navigator.pop(context);
+    } else {
+      // Show error to user
+      print(response.statusCode);
+      print(response.body);
+    }
   }
 
   @override
@@ -258,7 +273,6 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
             autofocus: true,
             controller: nameController,
             decoration: InputDecoration(labelText: 'Name'),
-            initialValue: widget.hero.name,
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter a name';
@@ -268,7 +282,6 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
           TextFormField(
             controller: identityController,
             decoration: InputDecoration(labelText: 'Identity'),
-            initialValue: widget.hero.identity,
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter an identity';
@@ -278,7 +291,6 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
           TextFormField(
             controller: hometownController,
             decoration: InputDecoration(labelText: 'Hometown'),
-            initialValue: widget.hero.hometown,
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter a hometown';
@@ -288,7 +300,6 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
           TextFormField(
             controller: ageController,
             decoration: InputDecoration(labelText: 'Age'),
-            initialValue: widget.hero.age.toString(),
             validator: (value) {
               int intValue = int.tryParse(value);
               if (intValue == null || intValue < 1) {
@@ -313,6 +324,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                                 Scaffold.of(context).showSnackBar(SnackBar(
                                     duration: Duration(seconds: 1),
                                     content: Text('Updating Hero...')));
+                                _callApiMethod(ApiMethods.UPDATE);
                               }
                             },
                             padding: const EdgeInsets.symmetric(
@@ -328,11 +340,10 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                           padding: EdgeInsets.all(12.0),
                           child: RaisedButton(
                             onPressed: () {
-                              if (_formKey.currentState.validate()) {
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                    duration: Duration(seconds: 1),
-                                    content: Text('Deleting Hero...')));
-                              }
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  duration: Duration(seconds: 1),
+                                  content: Text('Deleting Hero...')));
+                              _callApiMethod(ApiMethods.DELETE);
                             },
                             padding: const EdgeInsets.symmetric(
                                 vertical: 16.0, horizontal: 16.0),

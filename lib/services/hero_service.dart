@@ -57,5 +57,5 @@ Future<http.Response> updateHero(int heroId, HeroItem hero) async {
 }
 
 Future<http.Response> deleteHero(int heroId) async {
-  return await http.delete('$url/hero' + heroId.toString());
+  return await http.delete('$url/hero/' + heroId.toString());
 }
