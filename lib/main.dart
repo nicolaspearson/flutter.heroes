@@ -1,3 +1,4 @@
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:heroes/models/hero_model.dart';
 import 'package:heroes/services/hero_service.dart';
@@ -108,6 +109,7 @@ class _HomePageState extends State<HomePage> {
         child: new FutureBuilder<List<HeroItem>>(
           future: getHeroes(),
           builder: (context, snapshot) {
+            print('Fetched Heroes!');
             if (snapshot.hasData) {
               return new ListView.builder(
                   itemCount: snapshot.data.length,
@@ -171,6 +173,79 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
   // Note: This is a `GlobalKey<FormState>`, not a GlobalKey<_HeroDetailsFormState>!
   final _formKey = GlobalKey<FormState>();
 
+  final nameController = TextEditingController();
+  final identityController = TextEditingController();
+  final hometownController = TextEditingController();
+  final ageController = TextEditingController();
+
+  bool apiCallInProgress = false;
+
+  @override
+  void dispose() {
+    // Clean up the controllers when the Widget is disposed
+    nameController.dispose();
+    identityController.dispose();
+    hometownController.dispose();
+    ageController.dispose();
+    super.dispose();
+  }
+
+  HeroItem _newHero() {
+    HeroItem newHero = new HeroItem();
+
+    newHero.id = widget.hero.id;
+    newHero.name = widget.hero.name;
+    newHero.identity = widget.hero.identity;
+    newHero.hometown = widget.hero.hometown;
+    newHero.age = widget.hero.age;
+    newHero.createdAt = widget.hero.createdAt;
+    newHero.updatedAt = widget.hero.updatedAt;
+    newHero.deletedAt = widget.hero.deletedAt;
+
+    newHero.name = nameController.text;
+    newHero.identity = identityController.text;
+    newHero.hometown = hometownController.text;
+
+    int age = int.tryParse(ageController.text);
+    newHero.age = age;
+    return newHero;
+  }
+
+  Widget _getProgressWidget() {
+    if (apiCallInProgress)
+      return new CircularProgressIndicator();
+    else
+      return null;
+  }
+
+  void _callApiMethod(ApiMethods method) async {
+    setState(() {
+      apiCallInProgress = true;
+    });
+    http.Response response;
+    switch (method) {
+      case ApiMethods.CREATE:
+        response = await createHero(_newHero());
+        break;
+
+      case ApiMethods.UPDATE:
+        response = await updateHero(widget.hero.id, _newHero());
+        break;
+
+      case ApiMethods.DELETE:
+        response = await deleteHero(widget.hero.id);
+        break;
+    }
+
+    if (response != null) {
+      print(response);
+    }
+
+    setState(() {
+      apiCallInProgress = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey we created above
@@ -181,6 +256,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
         children: <Widget>[
           TextFormField(
             autofocus: true,
+            controller: nameController,
             decoration: InputDecoration(labelText: 'Name'),
             initialValue: widget.hero.name,
             validator: (value) {
@@ -190,6 +266,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
             },
           ),
           TextFormField(
+            controller: identityController,
             decoration: InputDecoration(labelText: 'Identity'),
             initialValue: widget.hero.identity,
             validator: (value) {
@@ -199,6 +276,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
             },
           ),
           TextFormField(
+            controller: hometownController,
             decoration: InputDecoration(labelText: 'Hometown'),
             initialValue: widget.hero.hometown,
             validator: (value) {
@@ -208,6 +286,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
             },
           ),
           TextFormField(
+            controller: ageController,
             decoration: InputDecoration(labelText: 'Age'),
             initialValue: widget.hero.age.toString(),
             validator: (value) {
@@ -272,6 +351,7 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                                 Scaffold.of(context).showSnackBar(SnackBar(
                                     duration: Duration(seconds: 1),
                                     content: Text('Creating Hero...')));
+                                _callApiMethod(ApiMethods.CREATE);
                               }
                             },
                             padding: const EdgeInsets.symmetric(
@@ -282,11 +362,14 @@ class _HeroDetailsFormState extends State<HeroDetailsForm> {
                           ),
                         )),
                   ]))),
+          _getProgressWidget(),
         ],
       ),
     );
   }
 }
+
+enum ApiMethods { CREATE, UPDATE, DELETE }
 
 class ScreenArguments {
   final HeroItem hero;
